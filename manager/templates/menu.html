@@ -1,102 +1,16 @@
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Gestion Utilisateurs et Groupes</title>
-    
-    <!-- Lien CDN Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-
-    <div class="container mt-5">
-        <h1 class="mb-4 text-center">Menu de gestion des utilisateurs et groupes Linux</h1>
-        <p>
-            Ce script vous permet de gerer les utilisateurs et les groupes sur le systeme.
-            Si l'execution prend du temps aller dans le terminale pour voir le probleme
-        </p>
-        <div class="row row-cols-1 row-cols-md-2 g-3">
-
-            <div class="col">
-                <form action="{% url 'create_user' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Création d'un utilisateur</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'create_group' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Création d'un groupe</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'add_user_to_group' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Ajouter un utilisateur à un groupe</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'add_user_to_group_sudo' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Ajouter un utilisateur au groupe sudo </button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'remove_user_from_group' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Supprimer un utilisateur d'un groupe</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'delete_group' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Supprimer un groupe</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'delete_user' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Supprimer un utilisateur</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'show_user_groups' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Afficher les groupes d'un utilisateur</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'show_group_users' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Afficher les utilisateurs d'un groupe</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'list_users' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Afficher les utilisateurs du système</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'list_groups' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Lister les groupes du système</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'logged_in_users' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Lister les utilisateurs connectés</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'change_passwd' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100"> Changer de mots de passe</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'passwd_forget' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100">Mots de passe oublie</button>
-                </form>
-            </div>
-            <div class="col">
-                <form action="{% url 'request_log_access' %}" method="get">
-                    <button type="submit" class="btn btn-outline-primary w-100">Journal des comptes creer</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script Bootstrap JS (optionnel mais utile pour certains composants) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Tableau de bord · Linux Manager{% endblock %}
+{% block header %}Tableau de bord{% endblock %}
+{% block content %}
+<section class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><h2 class="text-2xl font-bold tracking-tight text-slate-900">Bonjour, Administrateur</h2><p class="mt-1 text-slate-500">Gérez en toute simplicité les comptes et accès de ce serveur.</p></div><a href="{% url 'create_user' %}" class="btn-primary">＋ Créer un utilisateur</a></section>
+<section class="grid gap-4 sm:grid-cols-3"><div class="panel p-5"><p class="text-xs font-semibold uppercase tracking-wider text-brand-600">Utilisateurs</p><p class="mt-3 text-3xl font-bold text-slate-900">Gérer</p><a href="{% url 'list_users' %}" class="mt-4 inline-block text-sm font-semibold text-brand-600 hover:text-brand-700">Voir tous les utilisateurs →</a></div><div class="panel p-5"><p class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Groupes</p><p class="mt-3 text-3xl font-bold text-slate-900">Organiser</p><a href="{% url 'list_groups' %}" class="mt-4 inline-block text-sm font-semibold text-emerald-600 hover:text-emerald-700">Voir les groupes →</a></div><div class="panel p-5"><p class="text-xs font-semibold uppercase tracking-wider text-amber-600">Surveillance</p><p class="mt-3 text-3xl font-bold text-slate-900">Sessions</p><a href="{% url 'logged_in_users' %}" class="mt-4 inline-block text-sm font-semibold text-amber-600 hover:text-amber-700">Voir les connexions →</a></div></section>
+<section class="mt-8"><div class="mb-4"><h3 class="text-lg font-bold text-slate-900">Actions rapides</h3><p class="text-sm text-slate-500">Les opérations les plus fréquentes, regroupées au même endroit.</p></div><div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+  <a href="{% url 'create_user' %}" class="panel group p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"><span class="grid size-10 place-items-center rounded-lg bg-brand-50 text-xl text-brand-600">＋</span><h4 class="mt-4 font-semibold text-slate-900">Créer un utilisateur</h4><p class="mt-1 text-sm text-slate-500">Ajouter un nouveau compte système.</p></a>
+  <a href="{% url 'create_group' %}" class="panel group p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"><span class="grid size-10 place-items-center rounded-lg bg-brand-50 text-xl text-brand-600">▣</span><h4 class="mt-4 font-semibold text-slate-900">Créer un groupe</h4><p class="mt-1 text-sm text-slate-500">Structurer les permissions et accès.</p></a>
+  <a href="{% url 'add_user_to_group' %}" class="panel group p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"><span class="grid size-10 place-items-center rounded-lg bg-brand-50 text-xl text-brand-600">↗</span><h4 class="mt-4 font-semibold text-slate-900">Attribuer un groupe</h4><p class="mt-1 text-sm text-slate-500">Associer un utilisateur à un groupe.</p></a>
+  <a href="{% url 'show_user_groups' %}" class="panel p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"><span class="grid size-10 place-items-center rounded-lg bg-slate-100 text-xl text-slate-600">◉</span><h4 class="mt-4 font-semibold text-slate-900">Consulter les accès</h4><p class="mt-1 text-sm text-slate-500">Afficher les groupes d’un utilisateur.</p></a>
+  <a href="{% url 'change_passwd' %}" class="panel p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"><span class="grid size-10 place-items-center rounded-lg bg-amber-50 text-xl text-amber-600">⌘</span><h4 class="mt-4 font-semibold text-slate-900">Mot de passe</h4><p class="mt-1 text-sm text-slate-500">Modifier un mot de passe utilisateur.</p></a>
+  <a href="{% url 'request_log_access' %}" class="panel p-5 transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"><span class="grid size-10 place-items-center rounded-lg bg-violet-50 text-xl text-violet-600">▤</span><h4 class="mt-4 font-semibold text-slate-900">Journaux</h4><p class="mt-1 text-sm text-slate-500">Consulter l’historique des comptes.</p></a>
+</div></section>
+<section class="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5"><h3 class="font-semibold text-amber-900">Actions sensibles</h3><p class="mt-1 text-sm text-amber-800">La suppression et les privilèges sudo nécessitent une attention particulière.</p><div class="mt-4 flex flex-wrap gap-3"><a class="text-sm font-semibold text-rose-700 hover:underline" href="{% url 'delete_user' %}">Supprimer un utilisateur</a><a class="text-sm font-semibold text-rose-700 hover:underline" href="{% url 'delete_group' %}">Supprimer un groupe</a><a class="text-sm font-semibold text-amber-800 hover:underline" href="{% url 'add_user_to_group_sudo' %}">Donner l’accès sudo</a></div></section>
+{% endblock %}
