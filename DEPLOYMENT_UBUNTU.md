@@ -86,7 +86,7 @@ sudo visudo -f /etc/sudoers.d/linux-manager
 Adaptez les chemins au résultat de `command -v`, puis ajoutez par exemple :
 
 ```sudoers
-Cmnd_Alias LINUX_MANAGER = /usr/sbin/adduser, /usr/sbin/addgroup, /usr/sbin/usermod, /usr/bin/gpasswd, /usr/sbin/groupdel, /usr/sbin/userdel, /usr/sbin/chpasswd
+Cmnd_Alias LINUX_MANAGER = /usr/sbin/adduser, /usr/sbin/addgroup, /usr/sbin/usermod, /usr/bin/gpasswd, /usr/sbin/groupdel, /usr/sbin/groupmod, /usr/sbin/userdel, /usr/sbin/chpasswd, /usr/bin/chage, /usr/bin/chmod, /usr/bin/chown, /usr/bin/stat, /usr/bin/crontab, /usr/bin/lastlog, /usr/sbin/ausearch, /usr/bin/getfacl, /usr/bin/setfacl, /usr/sbin/ufw, /usr/sbin/iptables
 linuxmanager ALL=(root) NOPASSWD: LINUX_MANAGER
 ```
 

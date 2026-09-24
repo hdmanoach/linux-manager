@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block title %}{{ t('pg_del_cron') }} · Linux Manager{% endblock %}{% block header %}{{ t('nav_cron') }}{% endblock %}{% block content %}{% include "partials/form_card.html" with form_title=t('pg_del_cron') form_description=t('card_del_cron_desc') button_text=t('btn_delete') is_danger=True %}{% endblock %}

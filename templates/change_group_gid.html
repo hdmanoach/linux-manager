@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block title %}{{ t('pg_gid') }} · Linux Manager{% endblock %}{% block header %}{{ t('nav_groups') }}{% endblock %}{% block content %}{% include "partials/form_card.html" with form_title=t('card_gid') form_description=t('card_gid_desc') button_text=t('btn_update') is_danger=True %}{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% block title %}{{ t('pg_view_acl') }} · Linux Manager{% endblock %}{% block header %}{{ t('nav_files') }}{% endblock %}{% block content %}
+<section class="mx-auto max-w-4xl">
+  <div class="mb-6">
+    <a href="{% url 'menu' %}" class="text-sm font-semibold text-brand-600 hover:text-brand-700">{{ t('btn_back') }}</a>
+    <h2 class="mt-3 text-2xl font-bold text-slate-900">{{ t('card_view_acl') }}</h2>
+    <p class="mt-1 text-slate-500">{{ t('card_view_acl_desc') }}</p>
+  </div>
+  <div class="panel p-5 sm:p-7">
+    {% if error %}<div class="mb-5 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{{ error }}</div>{% endif %}
+    <form method="post" class="mb-6 flex flex-wrap gap-3" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="flex-1 min-w-[200px]">
+        <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">{{ field.label }}</label>
+        {{ field }}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn-primary self-end">{{ t('btn_consult') }}</button>
+    </form>
+    {% if acl_output %}
+    <h3 class="mb-3 text-lg font-bold text-slate-900">{{ t('lbl_acl_entries') }}</h3>
+    <pre class="overflow-x-auto rounded-lg border border-slate-200 bg-slate-900 p-4 font-mono text-xs text-slate-100">{{ acl_output }}</pre>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

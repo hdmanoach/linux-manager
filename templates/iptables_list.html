@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}{{ t('pg_ipt_list') }} · Linux Manager{% endblock %}{% block header %}{{ t('nav_firewall') }}{% endblock %}{% block content %}
+<section class="mx-auto max-w-4xl">
+  <div class="mb-6">
+    <a href="{% url 'menu' %}" class="text-sm font-semibold text-brand-600 hover:text-brand-700">{{ t('btn_back') }}</a>
+    <h2 class="mt-3 text-2xl font-bold text-slate-900">{{ t('card_ipt_list') }}</h2>
+    <p class="mt-1 text-slate-500">{{ t('card_ipt_list_desc') }}</p>
+  </div>
+  <div class="panel p-5 sm:p-7">
+    {% if error %}<div class="mb-5 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{{ error }}</div>{% endif %}
+    {% if iptables_output %}
+    <pre class="overflow-x-auto rounded-lg border border-slate-200 bg-slate-900 p-4 font-mono text-xs text-slate-100">{{ iptables_output }}</pre>
+    <div class="mt-4 flex flex-wrap gap-3">
+      <a href="{% url 'iptables_rule' %}" class="btn-primary">{{ t('btn_ipt_manage') }}</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

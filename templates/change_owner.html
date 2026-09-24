@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block title %}{{ t('pg_owner') }} · Linux Manager{% endblock %}{% block header %}{{ t('nav_files') }}{% endblock %}{% block content %}{% include "partials/form_card.html" with form_title=t('card_owner') form_description=t('card_owner_desc') button_text=t('btn_apply') is_danger=True %}{% endblock %}

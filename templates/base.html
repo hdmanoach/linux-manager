@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Linux Manager{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { theme: { extend: { colors: { brand: { 50:'#eff6ff', 100:'#dbeafe', 500:'#2563eb', 600:'#1d4ed8', 700:'#1d4ed8', 900:'#172554' } } } } }
@@ -23,24 +24,137 @@
 </head>
 <body>
   <div class="min-h-screen lg:flex">
-    <aside class="bg-slate-900 p-4 text-white lg:fixed lg:inset-y-0 lg:w-64 lg:p-5">
-      <a href="{% url 'menu' %}" class="mb-8 flex items-center gap-3 px-2">
-        <span class="grid size-10 place-items-center rounded-xl bg-brand-500 text-xl font-bold">L</span>
-        <span><strong class="block text-sm">Linux Manager</strong><small class="text-slate-400">Administration système</small></span>
-      </a>
-      <nav class="grid grid-cols-2 gap-2 lg:block lg:space-y-1">
-        <a href="{% url 'menu' %}" class="nav-link {% if request.endpoint == 'menu' %}nav-link-active{% endif %}">▦ <span>Tableau de bord</span></a>
-        <a href="{% url 'list_users' %}" class="nav-link {% if request.endpoint == 'list_users' %}nav-link-active{% endif %}">◉ <span>Utilisateurs</span></a>
-        <a href="{% url 'list_groups' %}" class="nav-link {% if request.endpoint == 'list_groups' %}nav-link-active{% endif %}">▣ <span>Groupes</span></a>
-        <a href="{% url 'logged_in_users' %}" class="nav-link {% if request.endpoint == 'logged_in_users' %}nav-link-active{% endif %}">◌ <span>Sessions actives</span></a>
-        <a href="{% url 'request_log_access' %}" class="nav-link {% if request.endpoint == 'request_log_access' or request.endpoint == 'verify_log_code' %}nav-link-active{% endif %}">▤ <span>Journaux</span></a>
+    <aside id="sidebar" class="bg-slate-900 p-4 text-white lg:fixed lg:inset-y-0 lg:w-64 lg:p-5">
+      <div class="mb-4 flex items-center justify-between px-2 lg:mb-8">
+        <a href="{% url 'menu' %}" class="flex items-center gap-3">
+          <span class="grid size-10 place-items-center rounded-xl bg-brand-500 text-xl font-bold">L</span>
+          <span><strong class="block text-sm">Linux Manager</strong><small class="text-slate-400">{{ t('hdr_subtitle') }}</small></span>
+        </a>
+        <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar-nav" aria-label="Menu" class="grid size-10 place-items-center rounded-lg text-xl text-slate-300 hover:bg-slate-800 lg:hidden">☰</button>
+      </div>
+      <nav id="sidebar-nav" class="mobile-collapsible hidden grid grid-cols-2 gap-2 lg:block lg:space-y-1">
+        <a href="{% url 'menu' %}" class="nav-link {% if request.endpoint == 'menu' %}nav-link-active{% endif %}">▦ <span>{{ t('nav_dashboard') }}</span></a>
+        <a href="{% url 'list_users' %}" class="nav-link {% if request.endpoint == 'list_users' %}nav-link-active{% endif %}">◉ <span>{{ t('nav_users') }}</span></a>
+        <a href="{% url 'list_groups' %}" class="nav-link {% if request.endpoint == 'list_groups' %}nav-link-active{% endif %}">▣ <span>{{ t('nav_groups') }}</span></a>
+        <a href="{% url 'logged_in_users' %}" class="nav-link {% if request.endpoint == 'logged_in_users' %}nav-link-active{% endif %}">◌ <span>{{ t('nav_sessions') }}</span></a>
+        <a href="{% url 'list_cron_jobs' %}" class="nav-link {% if request.endpoint == 'list_cron_jobs' or request.endpoint == 'system_cron' %}nav-link-active{% endif %}">⏱ <span>{{ t('nav_cron') }}</span></a>
+        <a href="{% url 'change_permissions' %}" class="nav-link {% if request.endpoint == 'change_permissions' %}nav-link-active{% endif %}">🔒 <span>{{ t('nav_chmod') }}</span></a>
+        <a href="{% url 'change_owner' %}" class="nav-link {% if request.endpoint == 'change_owner' %}nav-link-active{% endif %}">👤 <span>{{ t('nav_chown') }}</span></a>
+        <a href="{% url 'view_file_permissions' %}" class="nav-link {% if request.endpoint == 'view_file_permissions' %}nav-link-active{% endif %}">🔍 <span>{{ t('nav_view_perms') }}</span></a>
+        <a href="{% url 'file_audit' %}" class="nav-link {% if request.endpoint == 'file_audit' %}nav-link-active{% endif %}">📋 <span>{{ t('nav_file_audit') }}</span></a>
+        <a href="{% url 'view_acl' %}" class="nav-link {% if request.endpoint == 'view_acl' %}nav-link-active{% endif %}">📜 <span>{{ t('nav_view_acl') }}</span></a>
+        <a href="{% url 'set_acl' %}" class="nav-link {% if request.endpoint == 'set_acl' %}nav-link-active{% endif %}">➕ <span>{{ t('nav_set_acl') }}</span></a>
+        <a href="{% url 'remove_acl' %}" class="nav-link {% if request.endpoint == 'remove_acl' %}nav-link-active{% endif %}">➖ <span>{{ t('nav_remove_acl') }}</span></a>
+        <a href="{% url 'ufw_status' %}" class="nav-link {% if request.endpoint == 'ufw_status' or request.endpoint == 'ufw_rule' or request.endpoint == 'ufw_delete' %}nav-link-active{% endif %}">🛡 <span>{{ t('nav_ufw') }}</span></a>
+        <a href="{% url 'iptables_list' %}" class="nav-link {% if request.endpoint == 'iptables_list' or request.endpoint == 'iptables_rule' %}nav-link-active{% endif %}">📡 <span>{{ t('nav_iptables') }}</span></a>
+        <a href="{% url 'request_log_access' %}" class="nav-link {% if request.endpoint == 'request_log_access' or request.endpoint == 'verify_log_code' %}nav-link-active{% endif %}">▤ <span>{{ t('nav_logs') }}</span></a>
+        <a href="{% url 'about' %}" class="nav-link {% if request.endpoint == 'about' %}nav-link-active{% endif %}">ℹ <span>{{ t('nav_about') }}</span></a>
       </nav>
-      <div class="mt-8 border-t border-slate-800 pt-5"><p class="px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Actions rapides</p><a href="{% url 'create_user' %}" class="nav-link mt-2">＋ <span>Nouvel utilisateur</span></a><a href="{% url 'create_group' %}" class="nav-link">＋ <span>Nouveau groupe</span></a></div>
+      <div class="mobile-collapsible mt-6 hidden border-t border-slate-800 pt-4 lg:mt-8 lg:block lg:pt-5"><p class="px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{{ t('nav_quick') }}</p><a href="{% url 'create_user' %}" class="nav-link mt-2">＋ <span>{{ t('nav_new_user') }}</span></a><a href="{% url 'create_group' %}" class="nav-link">＋ <span>{{ t('nav_new_group') }}</span></a></div>
     </aside>
     <main class="min-w-0 flex-1 lg:ml-64">
-      <header class="flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4 sm:px-8"><div><p class="text-xs font-semibold uppercase tracking-wider text-brand-600">Console d’administration</p><h1 class="text-lg font-bold text-slate-900">{% block header %}Tableau de bord{% endblock %}</h1></div><div class="flex items-center gap-3"><span class="hidden text-right text-sm sm:block"><strong class="block text-slate-700">{{ current_admin }}</strong><small class="text-slate-500">Administrateur connecté</small></span><span class="grid size-10 place-items-center rounded-full bg-brand-100 text-brand-700">A</span><form method="post" action="{{ url_for('logout') }}">{{ csrf_token_input() }}<button class="text-sm font-semibold text-slate-500 hover:text-rose-600">Déconnexion</button></form></div></header>
+      <header class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-slate-200 bg-white px-4 py-3 sm:px-8 sm:py-4"><div class="min-w-0"><p class="text-xs font-semibold uppercase tracking-wider text-brand-600">{{ t('hdr_console') }}</p><h1 class="truncate text-base font-bold text-slate-900 sm:text-lg">{% block header %}Tableau de bord{% endblock %}</h1></div><div class="flex flex-wrap items-center gap-2 sm:gap-3"><span class="flex overflow-hidden rounded-lg border border-slate-200 text-xs font-bold"><a href="{{ url_for('set_language', code='fr') }}?next={{ request.path }}" class="px-2 py-1 {% if current_lang == 'fr' %}bg-brand-600 text-white{% else %}text-slate-500 hover:bg-slate-100{% endif %}">FR</a><a href="{{ url_for('set_language', code='en') }}?next={{ request.path }}" class="px-2 py-1 {% if current_lang == 'en' %}bg-brand-600 text-white{% else %}text-slate-500 hover:bg-slate-100{% endif %}">EN</a></span><span class="hidden text-right text-sm sm:block"><strong class="block text-slate-700">{{ current_admin }}</strong><small class="text-slate-500">{{ t('hdr_admin_online') }}</small></span><span class="grid size-10 place-items-center rounded-full bg-brand-100 text-brand-700">A</span><form method="post" action="{{ url_for('logout') }}">{{ csrf_token_input() }}<button class="text-sm font-semibold text-slate-500 hover:text-rose-600">{{ t('btn_logout') }}</button></form></div></header>
       <div class="mx-auto max-w-7xl p-5 sm:p-8">{% block content %}{% endblock %}</div>
     </main>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var menuToggle = document.getElementById('menu-toggle');
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+          var open = false;
+          document.querySelectorAll('#sidebar .mobile-collapsible').forEach(function(el) {
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) { open = true; }
+          });
+          menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          menuToggle.textContent = open ? '✕' : '☰';
+        });
+      }
+      var overlay = document.createElement('div');
+      overlay.id = 'loading-overlay';
+      overlay.className = 'fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-900/70 backdrop-blur-sm hidden';
+      var ovTitle = {{ t('overlay_title')|tojson }};
+      var ovText = {{ t('overlay_text')|tojson }};
+      var ovNote = {{ t('overlay_note')|tojson }};
+      overlay.innerHTML = '<div class="rounded-2xl bg-white p-8 shadow-2xl text-center max-w-sm mx-4"><div class="mb-4 text-4xl">⏳</div><h3 class="text-lg font-bold text-slate-900">' + ovTitle + '</h3><p class="mt-2 text-sm text-slate-600">' + ovText + '</p><p class="mt-3 text-xs text-slate-400">' + ovNote + '</p></div>';
+      document.body.appendChild(overlay);
+
+      document.querySelectorAll('form[novalidate]').forEach(function(form) {
+        form.addEventListener('submit', function() {
+          var btn = form.querySelector('button[type="submit"]');
+          if (btn) {
+            btn.disabled = true;
+            btn.dataset.origText = btn.textContent;
+            btn.textContent = {{ t('overlay_working')|tojson }};
+          }
+          overlay.classList.remove('hidden');
+        });
+      });
+
+      document.querySelectorAll('input[data-autocomplete]').forEach(function(input) {
+        var type = input.getAttribute('data-autocomplete');
+        var wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        input.parentNode.insertBefore(wrapper, input);
+        wrapper.appendChild(input);
+        var dropdown = document.createElement('div');
+        dropdown.className = 'absolute z-50 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg hidden max-h-60 overflow-y-auto';
+        wrapper.appendChild(dropdown);
+        var timer = null;
+        input.addEventListener('input', function() {
+          clearTimeout(timer);
+          var val = input.value;
+          if (val.length < 1) { dropdown.classList.add('hidden'); return; }
+          var apiUrl = '';
+          var searchTerm = '';
+          if (type === 'usergroup') {
+            var colonIdx = val.lastIndexOf(':');
+            if (colonIdx === -1) {
+              apiUrl = '/api/search_users/?q=' + encodeURIComponent(val);
+              searchTerm = val;
+            } else {
+              apiUrl = '/api/search_groups/?q=' + encodeURIComponent(val.substring(colonIdx + 1));
+              searchTerm = val.substring(colonIdx + 1);
+              var prefix = val.substring(0, colonIdx + 1);
+            }
+          } else {
+            apiUrl = '/api/search_' + type + '/?q=' + encodeURIComponent(val);
+            searchTerm = val;
+          }
+          timer = setTimeout(function() {
+            fetch(apiUrl, {credentials: 'same-origin'}).then(function(r) { return r.json(); }).then(function(matches) {
+              dropdown.innerHTML = '';
+              if (!matches.length) { dropdown.classList.add('hidden'); return; }
+              matches.forEach(function(m) {
+                var item = document.createElement('div');
+                item.className = 'cursor-pointer px-4 py-2 text-sm hover:bg-brand-50 hover:text-brand-700';
+                item.textContent = m;
+                item.addEventListener('mousedown', function(e) {
+                  e.preventDefault();
+                  if (type === 'usergroup' && colonIdx !== -1) {
+                    input.value = prefix + m;
+                  } else if (type === 'usergroup' && colonIdx === -1) {
+                    input.value = m + ':';
+                  } else {
+                    input.value = m;
+                  }
+                  dropdown.classList.add('hidden');
+                });
+                dropdown.appendChild(item);
+              });
+              dropdown.classList.remove('hidden');
+            }).catch(function() { dropdown.classList.add('hidden'); });
+          }, 200);
+        });
+        input.addEventListener('blur', function() {
+          setTimeout(function() { dropdown.classList.add('hidden'); }, 150);
+        });
+        input.addEventListener('focus', function() {
+          if (dropdown.children.length > 0) dropdown.classList.remove('hidden');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

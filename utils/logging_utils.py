@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-LOG_FILE_PATH = Path("var/log/audit.jsonl")
+LOG_FILE_PATH = Path(__file__).resolve().parent.parent / "var" / "log" / "audit.jsonl"
 
 
 def log_user_event(username, event_type, actor="unknown", success=True):
