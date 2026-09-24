@@ -48,6 +48,9 @@ ADMIN_USERNAME=admin
 ADMIN_PASSWORD_HASH=pbkdf2:sha256:600000$remplacez$par-un-vrai-hash
 ADMIN_PASSWORD_EXPIRY_DAYS=90
 ADMIN_PASSWORD_LAST_CHANGED=
+# HTTP sans certificat (IP locale) : passez à False, sinon le login boucle
+# (cookie Secure refusé en HTTP hors localhost). Laissez True derrière HTTPS.
+SESSION_COOKIE_SECURE=True
 ALLOWED_LOG_EMAILS=admin@example.com,responsable@example.com
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587

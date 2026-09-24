@@ -65,7 +65,7 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 app.config["MAX_LOGIN_ATTEMPTS"] = 5
 app.config["ADMIN_PASSWORD_EXPIRY_DAYS"] = int(os.environ.get("ADMIN_PASSWORD_EXPIRY_DAYS", "90"))
 app.config["ADMIN_PASSWORD_LAST_CHANGED"] = os.environ.get("ADMIN_PASSWORD_LAST_CHANGED", "")
-app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE", "True") == "True"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 

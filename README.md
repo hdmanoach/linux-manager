@@ -101,7 +101,7 @@ Ouvrez [http://127.0.0.1:5000](http://127.0.0.1:5000). Le mode debug est désact
 ## Sécurité
 
 - **Secrets** : jamais versionnés (`.env` ignoré). Démarrage impossible sans vraie clé Flask.
-- **Sessions** : cookie `Secure` + `HttpOnly` + `SameSite=Lax`, expiration après 30 min. Note : le flag `Secure` exige HTTPS hors `localhost` — en HTTP simple sur le réseau local, prévoyez HTTPS (voir guide Ubuntu).
+- **Sessions** : cookie `Secure` + `HttpOnly` + `SameSite=Lax`, expiration après 30 min. Note : en HTTP simple hors `localhost`, le navigateur refuse le cookie `Secure` (login en boucle) — mettez `SESSION_COOKIE_SECURE=False` ou, mieux, passez en HTTPS (voir guide Ubuntu).
 - **CSRF** : jeton obligatoire sur tous les POST (sauf login).
 - **Brute-force** : 5 tentatives max + cooldown progressif, hash `pbkdf2`, expiration MDP configurable.
 - **Injection** : aucune commande shell (listes d'arguments uniquement), noms validés par regex, modes `chmod`/`chown` validés, séparateur `--` anti-injection d'options, redirection `next` limitée aux chemins internes.
