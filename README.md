@@ -4,6 +4,8 @@ Application web Flask d'administration d'utilisateurs, groupes, fichiers, tâche
 
 > Cette application modifie le système réel (comptes, permissions, pare-feu). Déployez-la uniquement sur un serveur administré, derrière HTTPS, avec des règles `sudo` strictement limitées. **Tout accès admin équivaut à un accès root.**
 
+![Interface de linux-manager](docs/linux-manager.png)
+
 ## Fonctionnalités
 
 - **Utilisateurs** : création, suppression, verrouillage/déverrouillage, expiration, shell, home, nom complet (GECOS), mots de passe, politique `chage`
