@@ -8,13 +8,18 @@ Ce guide publie l'application Flask derrière **Gunicorn** et **Nginx**. Les com
 
 ```bash
 sudo apt update
-sudo apt install -y python3 python3-venv python3-pip nginx
+sudo apt install -y python3 python3-venv python3-pip nginx git acl
 sudo adduser --system --group --home /opt/linux-manager linuxmanager
-sudo mkdir -p /opt/linux-manager
+```
+
+Clonez le dépôt directement à sa place finale :
+
+```bash
+sudo git clone -b main https://github.com/hdmanoach/linux-manager.git /opt/linux-manager
 sudo chown -R linuxmanager:linuxmanager /opt/linux-manager
 ```
 
-Copiez ensuite le projet dans `/opt/linux-manager`.
+Créez l'environnement virtuel avec le compte de service :
 
 ```bash
 sudo -u linuxmanager -H bash
@@ -41,12 +46,16 @@ Son contenu doit ressembler à ceci :
 FLASK_SECRET_KEY=remplacez-par-une-cle-longue-et-aleatoire
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD_HASH=pbkdf2:sha256:600000$remplacez$par-un-vrai-hash
+ADMIN_PASSWORD_EXPIRY_DAYS=90
+ADMIN_PASSWORD_LAST_CHANGED=
 ALLOWED_LOG_EMAILS=admin@example.com,responsable@example.com
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
 SMTP_USER=admin@example.com
 SMTP_PASSWORD=mot-de-passe-application
 ```
+
+> `ADMIN_PASSWORD_EXPIRY_DAYS=0` désactive l'expiration. `ADMIN_PASSWORD_LAST_CHANGED` se met à jour depuis la page « Expiration MDP » de l'app.
 
 Générez une clé sûre avec :
 
@@ -71,10 +80,10 @@ sudo chmod 640 /etc/linux-manager.env
 
 Ne donnez jamais un accès `NOPASSWD: ALL` à l'utilisateur du service.
 
-Obtenez les chemins des commandes :
+Obtenez les chemins des commandes (toutes celles utilisées par l'app) :
 
 ```bash
-command -v adduser addgroup usermod gpasswd groupdel userdel chpasswd getent who groups
+command -v adduser addgroup usermod gpasswd groupdel groupmod userdel chpasswd chage chmod chown stat crontab lastlog ausearch getfacl setfacl ufw iptables
 ```
 
 Créez une règle sudo :
@@ -139,6 +148,14 @@ Pour suivre les erreurs :
 sudo journalctl -u linux-manager -f
 ```
 
+Vérifiez que l'app répond en local avant de continuer :
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:5000/login/
+```
+
+Vous devez obtenir `200`. Sinon, consultez les logs ci-dessus (souvent : `.env` manquant ou règle sudo absente).
+
 ## 5. Configurer Nginx
 
 Créez `/etc/nginx/sites-available/linux-manager` :
@@ -172,8 +189,15 @@ Activez la configuration :
 sudo ln -s /etc/nginx/sites-available/linux-manager /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
-sudo ufw allow 'Nginx Full'
 ```
+
+> ⚠️ N'activez UFW que **après** avoir autorisé SSH, sinon vous perdez l'accès distant :
+>
+> ```bash
+> sudo ufw allow OpenSSH
+> sudo ufw allow 'Nginx Full'
+> sudo ufw enable
+> ```
 
 ## 6. Activer HTTPS
 
@@ -188,6 +212,8 @@ sudo certbot --nginx -d manager.example.com
 
 ```bash
 cd /opt/linux-manager
+sudo git pull origin main
+sudo chown -R linuxmanager:linuxmanager /opt/linux-manager
 sudo -u linuxmanager -H .venv/bin/pip install -r requirements.txt
 sudo systemctl restart linux-manager
 sudo journalctl -u linux-manager -n 50 --no-pager

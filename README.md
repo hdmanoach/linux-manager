@@ -29,9 +29,26 @@ Application web Flask d'administration d'utilisateurs, groupes, fichiers, tâche
 
 ## Installation locale
 
+Installez les prérequis système (git, venv, ACL) :
+
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip acl
+```
+
+Clonez le dépôt puis entrez dedans :
+
+```bash
+git clone https://github.com/hdmanoach/linux-manager.git
+cd linux-manager
+```
+
+Créez l'environnement virtuel et installez les dépendances :
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 cp .env.example .env
 ```
